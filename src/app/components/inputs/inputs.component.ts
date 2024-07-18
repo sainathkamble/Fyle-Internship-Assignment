@@ -23,6 +23,7 @@ import { WorkoutService, PeriodicElement } from '../../service/workout.service';
   styleUrls: ['./inputs.component.css']
 })
 export class InputsComponent {
+  id: number = 0;
   name: string = '';
   workoutType: string = '';
   duration: number | null = null;
@@ -36,16 +37,32 @@ export class InputsComponent {
     }
 
     const newWorkout: PeriodicElement = {
-      id: Date.now(),
+      id: ++this.id,
       name: this.name,
       workouts: [{ type: this.workoutType, minutes: this.duration }]
     };
+
+    this.saveToLocalStorage('newWorkout', newWorkout);
 
     this.workoutService.addWorkout(newWorkout);
 
     this.name = '';
     this.workoutType = '';
     this.duration = null;
+  }
+
+  private saveToLocalStorage(key: string, data: any): void {
+    try {
+      // Retrieve existing data from localStorage
+      const existingData = JSON.parse(localStorage.getItem(key) || '[]');
+      // Combine existing and new data
+      const updatedData = [...existingData, data];
+      // Save updated data back to localStorage
+      localStorage.setItem(key, JSON.stringify(updatedData));
+      console.log(`Saved data to localStorage with key: ${key}`);
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
   }
 }
 

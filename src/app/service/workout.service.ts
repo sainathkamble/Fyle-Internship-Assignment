@@ -46,8 +46,28 @@ export class WorkoutService {
   private workoutDataSubject = new BehaviorSubject<PeriodicElement[]>(initialData);
   workoutData$ = this.workoutDataSubject.asObservable();
 
+  constructor() {
+    this.setInitialData(initialData);
+    this.loadInitialData();
+    }
+
   addWorkout(newWorkout: PeriodicElement): void {
     const currentData = this.workoutDataSubject.getValue();
     this.workoutDataSubject.next([...currentData, newWorkout]);
+
+    localStorage.setItem('newWorkout', JSON.stringify([...currentData, newWorkout]));
+  }
+
+  setInitialData(data: PeriodicElement[]): void {
+    this.workoutDataSubject.next(data);
+  }
+
+  private loadInitialData(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedData = JSON.parse(localStorage.getItem('newWorkout') || '[]');
+      if (savedData.length) {
+        this.workoutDataSubject.next(savedData);
+      }
+    }
   }
 }

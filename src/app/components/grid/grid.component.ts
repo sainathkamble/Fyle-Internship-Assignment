@@ -33,9 +33,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private workoutService: WorkoutService) {}
+  constructor(private workoutService: WorkoutService) {
+  }
 
   ngOnInit() {
+    this.loadDataFromLocalStorage();
+
     this.workoutService.workoutData$.subscribe(data => {
       this.dataSource.data = data;
     });
@@ -62,13 +65,21 @@ export class GridComponent implements OnInit, AfterViewInit {
         return workoutMatch && data.name.toLowerCase().includes(filter);
       };
     }
-    this.dataSource.filter = '';
+    //this.dataSource.filter = '';
   }
 
   formatWorkouts(workouts: Workout[]): string {
     return workouts.map(workout => `${workout.type}: ${workout.minutes} mins`).join(', ');
   }
+
+  private loadDataFromLocalStorage(): void {
+    const savedData = JSON.parse(localStorage.getItem('newWorkout') || '[]');
+    this.dataSource.data = savedData;
+
+    this.workoutService.setInitialData(savedData);
+  }
 }
+
 
 
 
