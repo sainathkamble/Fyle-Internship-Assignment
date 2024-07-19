@@ -43,6 +43,7 @@ const initialData: PeriodicElement[] = [
   providedIn: 'root',
 })
 export class WorkoutService {
+  //behavior subject to emit the workout data when changes occur
   private workoutDataSubject = new BehaviorSubject<PeriodicElement[]>(initialData);
   workoutData$ = this.workoutDataSubject.asObservable();
 
@@ -51,6 +52,7 @@ export class WorkoutService {
     this.loadInitialData();
     }
 
+  //add workout to the grid table  
   addWorkout(newWorkout: PeriodicElement): void {
     const currentData = this.workoutDataSubject.getValue();
     this.workoutDataSubject.next([...currentData, newWorkout]);
@@ -62,6 +64,7 @@ export class WorkoutService {
     this.workoutDataSubject.next(data);
   }
 
+  //get data from local storage
   private loadInitialData(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       const savedData = JSON.parse(localStorage.getItem('newWorkout') || '[]');

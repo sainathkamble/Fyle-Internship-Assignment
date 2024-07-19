@@ -1,4 +1,3 @@
-// src/app/components/grid/grid.component.ts
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -13,7 +12,7 @@ import { WorkoutService, PeriodicElement, Workout } from '../../service/workout.
 @Component({
   selector: 'app-grid',
   standalone: true,
-  imports: [
+  imports: [  
     CommonModule,
     MatTableModule,
     MatPaginatorModule,
@@ -49,11 +48,13 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
+  //filter by name
   applyNameFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  //filter by workout type
   applyWorkoutFilter(workoutType: string) {
     if (workoutType === '') {
       this.dataSource.filterPredicate = (data: PeriodicElement, filter: string) => {
@@ -65,13 +66,15 @@ export class GridComponent implements OnInit, AfterViewInit {
         return workoutMatch && data.name.toLowerCase().includes(filter);
       };
     }
-    //this.dataSource.filter = '';
+    this.dataSource.filter = '';
   }
 
+  //save data to grid table
   formatWorkouts(workouts: Workout[]): string {
     return workouts.map(workout => `${workout.type}: ${workout.minutes} mins`).join(', ');
   }
 
+  //get data from local storage
   private loadDataFromLocalStorage(): void {
     const savedData = JSON.parse(localStorage.getItem('newWorkout') || '[]');
     this.dataSource.data = savedData;

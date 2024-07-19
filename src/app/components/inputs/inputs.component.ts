@@ -1,4 +1,3 @@
-// src/app/components/inputs/inputs.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,12 +35,14 @@ export class InputsComponent {
       return;
     }
 
+    // Create a new workout object with provided data and increment the id
     const newWorkout: PeriodicElement = {
       id: ++this.id,
       name: this.name,
       workouts: [{ type: this.workoutType, minutes: this.duration }]
     };
-
+    
+    // Save the new workout to localStorage and the service
     this.saveToLocalStorage('newWorkout', newWorkout);
 
     this.workoutService.addWorkout(newWorkout);
@@ -53,10 +54,12 @@ export class InputsComponent {
 
   private saveToLocalStorage(key: string, data: any): void {
     try {
-      // Retrieve existing data from localStorage
+      //get existing data from localStorage
       const existingData = JSON.parse(localStorage.getItem(key) || '[]');
+
       // Combine existing and new data
       const updatedData = [...existingData, data];
+
       // Save updated data back to localStorage
       localStorage.setItem(key, JSON.stringify(updatedData));
       console.log(`Saved data to localStorage with key: ${key}`);
